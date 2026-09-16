@@ -21,10 +21,11 @@ Q.forEach((x,i)=>{let input=x.type==='choice'?'<div class="choices">'+x.o.map(o=
     <p class="kicker">KLART</p>
     <h2>TACK FÖR DIN INPUT</h2>
 
-    <p>
-      Dina svar har tagits emot och kommer användas för att identifiera
-      möjligheter till förbättringar, automatisering och smartare arbetssätt.
-    </p>
+    <p>Svaret har registrerats lokalt i demo-läget.</p>
+
+    <a href="admin.html" style="color:#e6e6d7">
+      Öppna demoöversikten
+    </a>
   </div>
 </section>';markup+='<div class="modalBackdrop" id="rmsModal" role="dialog" aria-modal="true"><div class="modalBox"><p class="kicker">EN ANNAN TYP AV FEEDBACK</p><h2>Beskriv arbetsmomentet i stället</h2><p>Den här enkäten fokuserar på processer, arbetssätt och möjliga förbättringar.</p><p>Beskriv gärna vad du försöker göra i stället för vilket system som används. Feedback och utvecklingsförslag om RMS hanteras i separata enkäter.</p><div class="modalExample">Exempel: ”Det tar lång tid att uppdatera prognoser och kontrollera priser manuellt.”</div><div class="modalActions"><button class="primary" id="editRmsAnswer">Ändra svaret</button></div></div></div>';app.innerHTML=markup;const scenes=[...document.querySelectorAll('.scene')],rail=document.getElementById('rail');rail.innerHTML=scenes.map((_,i)=>'<button class="dot" data-go="'+i+'"></button>').join('');
 function go(i){i=Math.max(0,Math.min(i,scenes.length-1));current=i;scenes.forEach(s=>s.classList.remove('focus'));let s=scenes[i],p=s.querySelector('.panel');s.classList.add('focus');window.scrollTo({top:p.getBoundingClientRect().top+scrollY-(innerHeight-p.offsetHeight)/2,behavior:'smooth'});setTimeout(()=>s.classList.remove('focus'),900);if(i===7)review()}
