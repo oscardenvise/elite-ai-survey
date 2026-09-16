@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="sv">
+<meta charset="utf-8">
+<title>Admin</title>
+
+<style>
+body{
+    background:#212529;
+    color:#e6e6d7;
+    font-family:Garamond;
+    padding:30px;
+}
+table{
+    border-collapse:collapse;
+    width:100%;
+}
+td,th{
+    border:1px solid #777;
+    padding:10px;
+    vertical-align:top;
+}
+button,a{
+    padding:10px;
+    margin:5px;
+}
+.danger{
+    background:#8f1824;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+</style>
+
+<body>
+
+<a href="index.html">Till undersökningen</a>
+
+<h1>Lokala testsvar</h1>
+
+<button onclick="exportCsv()">Exportera CSV</button>
+<button class="danger" onclick="clearResponses()">
+🗑 Rensa lokala testsvar
+</button>
+
+<table>
+<thead>
+<tr>
+<th>Tid</th>
+<th>Roll</th>
+<th>Tar tid</th>
+<th>Manuellt</th>
+<th>Frustration</th>
+<th>AI</th>
+<th>Övrigt</th>
+</tr>
+</thead>
+<tbody id="r"></tbody>
+</table>
+
+<script>
+let d = JSON.parse(localStorage.getItem('wq9Responses') || '[]');
+
+let c = [
+    'submittedAt',
+    'role',
+    'time',
+    'manual',
+    'friction',
+    'automation',
+    'other'
+];
+
+r.innerHTML = d.map(x =>
+    '<tr>' +
+    c.map(k =>
+        '<td>' +
+        String(x[k] || '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;') +
+        '</td>'
+    ).join('') +
+    '</tr>'
+).join('');
+
+function exportCsv() {
+
+    let s = [c, ...d.map(x => c.map(k => x[k] || ''))]
+        .map(a =>
+            a.map(v =>
+                '"' + String(v).replaceAll('"', '""') + '"'
+            ).join(',')
+        )
+        .join('\n');
+
+    let a = document.createElement('a');
+
+    a.href = URL.createObjectURL(
+        new Blob(
+            ['\ufeff' + s],
+            { type:'text/csv' }
+        )
+    );
+
+    a.download = 'svar.csv';
+    a.click();
+}
+
+function clearResponses() {
+
+    const pwd = prompt(
+        'Ange lösenord för att rensa alla lokala testsvar'
+    );
+
+    if (pwd !== 'Bajen26') {
+        alert('Fel lösenord');
+        return;
+    }
+
+    if (
+        !confirm(
+            'Är du säker på att du vill radera alla lokala testsvar?'
+        )
+    ) {
+        return;
+    }
+
+    localStorage.removeItem('wq9Responses');
+    localStorage.removeItem('wq9Draft');
+
+    alert('Alla lokala testsvar har raderats.');
+
+    location.reload();
+}
+</script>
+
+</body>
+</html>
